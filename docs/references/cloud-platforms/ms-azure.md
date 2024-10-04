@@ -16,10 +16,15 @@ Microsoft Azure is a cloud computing service created by Microsoft for building, 
       - [Microsoft Entra Domain Services (Azure AD DS)](#microsoft-entra-domain-services-azure-ad-ds)
       - [User Accounts](#user-accounts)
   - [Subscriptions](#subscriptions)
-
+    - [Cost Management](#cost-management)
+    - [Resource Tags](#resource-tags)
+  - [Azure Policy](#azure-policy)
+  - [Regions](#regions)
 
 ## Azure Services
+
 Azure offers a wide range of cloud services, including:
+
 - **Compute**: Virtual Machines, Kubernetes, Azure Functions
 - **Storage**: Blob Storage, File Storage, Disk Storage
 - **Networking**: Virtual Network, Load Balancer, VPN Gateway
@@ -47,6 +52,7 @@ Azure offers a wide range of cloud services, including:
 Microsoft Entra ID is a unified identity platform that provides secure access to Microsoft services and applications. It allows users to sign in to Microsoft services with a single account.
 
 Provides more secure access to cloud-based resources for organizations and users by:
+
 - Configuring access to applications
 - Configuring single sign-on (SSO) to cloud-based SaaS applications
 - Managing users and groups
@@ -93,6 +99,7 @@ The Microsoft Entra schema defines the structure of objects that can be stored i
 | Management | Azure Portal, Microsoft 365 Admin Center | Active Directory Users and Computers (ADUC), Active Directory Administrative Center (ADAC) |
 
 #### Microsoft Entra ID P1 and P2 Plans
+
 Comparison Table
 
 | Feature | P1 | P2 |
@@ -117,7 +124,7 @@ Comparison Table
 - These services are fully compatible with locally deployed AD DS, so you can use them without deploying and managing additional domain controllers in the cloud.
 
 ![alt text](image.png)
-source: https://docs.microsoft.com/en-us/azure/active-directory-domain-services/overview
+source: <https://docs.microsoft.com/en-us/azure/active-directory-domain-services/overview>
 
 #### User Accounts
 
@@ -134,3 +141,61 @@ Table with user account and description
 ## Subscriptions
 
 Azure subscriptions are used to manage access to Azure services and resources. Each subscription has limits and quotas that can be adjusted based on your needs.
+
+![alt text](image-1.png)
+source: <https://docs.microsoft.com/en-us/azure/cost-management-billing/manage/create-subscription>
+
+Table of subscription types with description
+
+| Subscription Type | Description |
+| --- | --- |
+| Free Trial | 30-day trial subscription with $200 credit to explore Azure services. |
+| Pay-As-You-Go | Pay for Azure services on a monthly basis with no long-term commitment. |
+| Enterprise Agreement | Customized agreement for large organizations with volume discounts and flexible payment terms. |
+| Student | Free subscription for students to learn and explore Azure services. |
+| Visual Studio | Subscription for developers with access to Azure services for development and testing. |
+
+### Cost Management
+
+Azure Cost Management helps you understand and manage your Azure spending by providing insights into your usage and costs.
+
+### Resource Tags
+
+Resource tags are key-value pairs that you can assign to Azure resources to organize and categorize them for cost tracking and management.
+
+Considerations for tagging resources:
+- Use consistent naming conventions for tags.
+- Use tags to track cost centers, projects, environments, and owners.
+- Use tags to filter and group resources in cost reports.
+- Use tags to apply policies and automation to resources.
+- Use tags to track compliance and security requirements.
+- Use tags to track resource lifecycle and ownership.
+- Use tags to track resource dependencies and relationships.
+- Use tags to track resource performance and usage.
+- Use tags to track resource location and region.
+
+## Azure Policy
+
+Azure Policy is a service in Azure that you use to create, assign, and manage policies that enforce different rules and effects over your resources. For example, you can create policies that enforce resource tags, require specific regions, or limit resource types.
+
+## Regions
+Table of regional pairs characteristics with characteristic and description columns
+
+| Characteristic | Description |
+| --- | --- |
+| Physical Isolation | Each region is physically isolated from other regions to prevent data leakage and unauthorized access. |
+| Data Residency | Data stored in a region stays in that region unless explicitly moved to another region. |
+| Platform - Provided Resiliency | Azure provides resiliency within a region by replicating data across multiple data centers. |
+| Region recovery order | In the event of a region-wide failure, recovery is prioritized based on the region recovery order. |
+| Sequential Updates | Planned Azure system updates are rolled out to paired regions sequentially. Rolling updates minimizes downtime, reduce bugs, and logical failures in the rare event of a bad update. |
+
+| Service | Description | Requires Region Pairing |
+| --- | --- | --- |
+| Azure Traffic Manager | Distributes incoming traffic across multiple regions to improve availability and responsiveness. | <span style="background-color: green; color: white; padding: 2px 5px; border-radius: 3px;">Yes</span> |
+| Blob Storage | Replicates data across paired regions to ensure data durability and availability. | <span style="background-color: green; color: white; padding: 2px 5px; border-radius: 3px;">Yes</span> |
+| Azure SQL Database | Provides automatic failover to a paired region in the event of a region-wide failure. | <span style="background-color: green; color: white; padding: 2px 5px; border-radius: 3px;">Yes</span> |
+| Azure Cosmos DB | Offers multi-region writes and automatic failover to a paired region. | <span style="background-color: green; color: white; padding: 2px 5px; border-radius: 3px;">Yes</span> |
+| Azure Active Directory | Provides disaster recovery and business continuity by replicating data across paired regions. | <span style="background-color: green; color: white; padding: 2px 5px; border-radius: 3px;">Yes</span> |
+| Azure Key Vault | Replicates keys and secrets across paired regions to ensure data availability and compliance. | <span style="background-color: green; color: white; padding: 2px 5px; border-radius: 3px;">Yes</span> |
+| Azure Backup | Replicates backup data across paired regions to ensure data durability and availability. | <span style="background-color: green; color: white; padding: 2px 5px; border-radius: 3px;">Yes</span> |
+
