@@ -3,18 +3,19 @@
 Microsoft Azure is a cloud computing service created by Microsoft for building, testing, deploying, and managing applications and services
 
 ## Table of Contents
-- [Azure Services](#azure-services)
-- [Azure Identity](#azure-identity) 
-- [Azure Architecture](#azure-architecture)
-- [Azure Solutions](#azure-solutions)
-- [Azure Tools](#azure-tools)
-- [Azure Features](#azure-features)
-- [Azure Management Tools](#azure-management-tools)
-- [Azure Pricing](#azure-pricing)
-- [Azure Security](#azure-security)
-- [Azure Best Practices](#azure-best-practices)
-- [Azure Certifications](#azure-certifications)
-- [Azure Learning Resources](#azure-learning-resources)
+- [Microsoft Azure](#microsoft-azure)
+  - [Table of Contents](#table-of-contents)
+  - [Azure Services](#azure-services)
+  - [Azure Identity](#azure-identity)
+    - [Microsoft Entra ID](#microsoft-entra-id)
+      - [Microsoft Entra Tenants](#microsoft-entra-tenants)
+      - [Microsoft Entra Schema](#microsoft-entra-schema)
+      - [Microsoft Entra ID vs Active Directory Domain Services (AD DS)](#microsoft-entra-id-vs-active-directory-domain-services-ad-ds)
+      - [Microsoft Entra ID P1 and P2 Plans](#microsoft-entra-id-p1-and-p2-plans)
+      - [Microsoft Entra Domain Services (Azure AD DS)](#microsoft-entra-domain-services-azure-ad-ds)
+      - [User Accounts](#user-accounts)
+  - [Subscriptions](#subscriptions)
+
 
 ## Azure Services
 Azure offers a wide range of cloud services, including:
@@ -116,3 +117,19 @@ Comparison Table
 
 ![alt text](image.png)
 source: https://docs.microsoft.com/en-us/azure/active-directory-domain-services/overview
+
+#### User Accounts
+
+3 types of user accounts in Microsoft Entra:
+Table with user account and description
+
+| User Account | Description |
+| --- | --- |
+| Cloud Identity | User account created in Microsoft Entra that is not synchronized with an on-premises directory. |
+| Synced Identity | User account created in an on-premises directory and synchronized with Microsoft Entra using Azure AD Connect. |
+| Federated Identity | User account created in an on-premises directory and authenticated by an on-premises identity provider using federation services. |
+| Guest User | User account created in another organization and invited to access resources in your organization. |
+
+## Subscriptions
+
+Azure subscriptions are used to manage access to Azure services and resources. Each subscription has limits and quotas that can be adjusted based on your needs.
