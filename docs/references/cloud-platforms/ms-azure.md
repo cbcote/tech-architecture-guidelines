@@ -25,6 +25,11 @@ Microsoft Azure is a cloud computing service created by Microsoft for building, 
       - [Create Initiative Definition](#create-initiative-definition)
   - [Regions](#regions)
     - [Services with Region Pairing](#services-with-region-pairing)
+  - [RBAC](#rbac)
+    - [Create a role assignment:](#create-a-role-assignment)
+  - [Azure Virtual Networks](#azure-virtual-networks)
+    - [Subnets](#subnets)
+
 
 ## Azure Services
 
@@ -134,7 +139,6 @@ source: <https://docs.microsoft.com/en-us/azure/active-directory-domain-services
 #### User Accounts
 
 3 types of user accounts in Microsoft Entra:
-Table with user account and description
 
 | User Account | Description |
 | --- | --- |
@@ -142,6 +146,12 @@ Table with user account and description
 | Synced Identity | User account created in an on-premises directory and synchronized with Microsoft Entra using Azure AD Connect. |
 | Federated Identity | User account created in an on-premises directory and authenticated by an on-premises identity provider using federation services. |
 | Guest User | User account created in another organization and invited to access resources in your organization. |
+
+| User Account | Description |
+| --- | --- |
+| Administrator | allows users elevated access to control who's allowed to do what. |
+| Member | Native member of the Microsoft Entra organization that has a set of default permissions, like being able to manage their profile information. |
+| Guest | have restricted Microsoft Entra organization permissions. |
 
 ## Subscriptions
 
@@ -279,3 +289,64 @@ Table of regional pairs characteristics with characteristic and description colu
 | Azure Key Vault | Replicates keys and secrets across paired regions to ensure data availability and compliance. | <span style="background-color: green; color: white; padding: 2px 5px; border-radius: 3px;">Yes</span> |
 | Azure Backup | Replicates backup data across paired regions to ensure data durability and availability. | <span style="background-color: green; color: white; padding: 2px 5px; border-radius: 3px;">Yes</span> |
 
+## RBAC
+
+Role-Based Access Control (RBAC) is an authorization system that allows you to manage access to Azure resources. RBAC uses roles to define permissions, and role assignments to grant access to users, groups, and applications.
+
+![alt text](image-4.png)
+source: <https://docs.microsoft.com/en-us/azure/role-based-access-control/overview>
+
+Examples of scenarios you can implement Azure RBAC:
+
+- Allow one user to manage virtual machines in a subscription and another user to mange virtual networks
+- Allow a database administrator group to manage SQL databases in a subscription
+- Allow a user to manage all resources in a resource group, such as virtual machines, websites, and subnets
+- Allow an application to access all resources in a resource group
+
+### Create a role assignment:
+
+1. Security Principal (who): User, group, service principal, or managed identity
+2. Role Definition (what): a collection of permissions
+3. Scope (where): level where the access applies
+
+## Azure Virtual Networks
+
+Azure Virtual Networks allow you to create isolated networks in the cloud to run your applications and services. You can control inbound and outbound traffic, and connect virtual networks to on-premises networks.
+
+Characteristics of Azure Virtual Networks:
+
+- logical isolation of the Azure cloud resources
+- Can use virtual networks to provision and manage virtual private networks (VPNs) in Azure
+- Each virtual network has its own Classless Inter-Domain Routing (CIDR) block and can be linked to other virtual networks and on-premises networks.
+- You can link virtual networks with an on-premises IT infrastructure to create hybrid or cross-premises solutions, when the CIDR blocks of the connecting networks don't overlap.
+- You control the DNS serer settings for virtual networks, and segmentation of the virtual network into subnets.
+
+Scenarios of virtual network configuatrions:
+table with columns Scenario, Description
+
+| Scenario | Description |
+| --- | --- |
+| Create a dedicated private cloud-only virtual network | Sometimes you don't require a cross-premises configuration for your solution. When you create a virtual network, your services and virtual machines within your virtual network can communicate directly and securely with each other in the cloud. You can still configure endpoint connections for the virtual machines and services that require internet communication, as part of your solution. |
+| Securely extend your data center with virtual networks | You can build traditional site-to-site VPNs to securely scale your datacenter capacity. Site-to-site VPNs use IPSEC to provide a secure connection between your corporate VPN gateway and Azure. |
+| Enable hybrid cloud scenarios | Virtual networks give you the flexibility to support a range of hybrid cloud scenarios. You can securely connect cloud-based applications to any type of on-premises system, such as mainframes and Unix systems. |
+
+### Subnets
+
+Subnets provide a way for you to implement logical divisions within your virtual network. Your network can be segmented into subnets to help improve security, increase performance, and make it easier to manage.
+
+Characteristics of subnets:
+
+- Each subnet contains a range of IP addresses that fall within the virtual network address space.
+- The address range for a subnet must be unique with the address space for the virtual network.
+- The range for one subnet can't overlap with other subnet IP address ranges in the same virtual network.
+- The IP address space for a subnet must be specified by using CIDR notation.
+- You can segment a virtual network into one or more subnets in the Azure portal.
+
+Table of reserved subnet addresses with columns Reserved Address, Reason
+
+| Reserved Address | Reason |
+| --- | --- |
+| 192.168.1.0 | Network address |
+| 192.168.1.1 | Azure configures this address as the default gateway. |
+| 192.168.1.2 and 192.168.1.3 | Azure maps these Azure DNS IP addresses to the virtual network space. |
+| 192.168.1.255 | Broadcast address |
