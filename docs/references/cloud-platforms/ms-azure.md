@@ -19,7 +19,12 @@ Microsoft Azure is a cloud computing service created by Microsoft for building, 
     - [Cost Management](#cost-management)
     - [Resource Tags](#resource-tags)
   - [Azure Policy](#azure-policy)
+    - [Management Groups](#management-groups)
+      - [Create Azure Policies](#create-azure-policies)
+      - [Create Policy Definitions](#create-policy-definitions)
+      - [Create Initiative Definition](#create-initiative-definition)
   - [Regions](#regions)
+    - [Services with Region Pairing](#services-with-region-pairing)
 
 ## Azure Services
 
@@ -176,9 +181,82 @@ Considerations for tagging resources:
 
 ## Azure Policy
 
-Azure Policy is a service in Azure that you use to create, assign, and manage policies that enforce different rules and effects over your resources. For example, you can create policies that enforce resource tags, require specific regions, or limit resource types.
+- Azure Policy is a service in Azure that you use to create, assign, and manage policies that enforce different rules and effects over your resources. For example, you can create policies that enforce resource tags, require specific regions, or limit resource types.
+- You can use polices to enforce rules on resources to meet corporate compliance standards and service-level agreements (SLAs).
+
+| Advantage | Description |
+| --- | --- |
+| Enforce rules and compliance | Enable built-in policies, or build custom policies for all resource types. Support real-time policy evaluation and enforcement, and periodic or on-demand compliance evaluation. |
+| Apply policies at scale | Apply policies to a management group with control across your entire organization. Apply multiple policies and aggregate policy states with policy initiative. Define an exclusion scope. |
+| Perform remediation | Conduct real-time remediation, and remediation on your existing resources. |
+| Exercise governance | Implement governance tasks for your environment |
+
+Things to consider when using Azure Policy:
+
+- Deployable resources: Specify the resource types that your organization can deploy by using Azure Policy.
+- Location restrictions: Restrict the locations your users can specify when deploying resources.
+- Rules enforcement: Enforce compliance rules and configuration options to help manage your resources and user options.
+- Inventory audits: Use Azure Policy with Azure Backup service on your VMs and run inventory audits.
+
+### Management Groups
+
+Azure Management Groups are containers that help you manage access, policy, and compliance for multiple subscriptions. You can use management groups to apply policies and access controls to a group of subscriptions.
+
+![alt text](image-2.png)
+source: <https://docs.microsoft.com/en-us/azure/governance/management-groups/overview>
+
+Things to consider when using management groups:
+
+- Consider customizing the hierarchy to reflect your organization's structure.
+- Consider policy inheritance and precedence within the hierarchy.
+- Consider compliance and security requirements for each management group.
+- Consider cost tracking and management for each management group.
+
+Ways to create management groups:
+
+- Azure Portal
+- PowerShell
+- Azure CLI
+
+- Management groups have a directory unique identifier (ID) and a display name. The ID is used to submit commands on the management group.
+- The ID **cannot** be changed after the management group is created.
+
+#### Create Azure Policies
+
+![alt text](image-3.png)
+source: <https://docs.microsoft.com/en-us/azure/governance/policy/overview>
+
+**Policy Definition**: describes the compliance conditions for a resource, and the actions to complete when the conditions are met.
+
+**Initiative Definition**: a set of policy definitions to help track your compliance state for a larger goal.
+
+1. Create Policy definitions
+2. Create Initiative definition
+3. Scope the initiative definition
+4. Determine compliance
+
+#### Create Policy Definitions
+
+Examples of policy definitions:
+
+- Allowed virtual machine size SKUs
+- Allowed locations
+- Not allowed resource types
+- Allowed storage account SKUs
+- Allowed storage account SKUs 
+
+#### Create Initiative Definition
+
+Along with creating your own initiative definition, you can use built-in initiative definitions to help you get started.
+
+Examples of built-in initiative definitions:
+
+- Audit machines with insecure password security settings
+- Configure Windows machines to run Azure Monitor Agent and associate them to a Data Collection Rule
+- Configure Azure Defender to be enabled on SQL servers
 
 ## Regions
+
 Table of regional pairs characteristics with characteristic and description columns
 
 | Characteristic | Description |
@@ -188,6 +266,8 @@ Table of regional pairs characteristics with characteristic and description colu
 | Platform - Provided Resiliency | Azure provides resiliency within a region by replicating data across multiple data centers. |
 | Region recovery order | In the event of a region-wide failure, recovery is prioritized based on the region recovery order. |
 | Sequential Updates | Planned Azure system updates are rolled out to paired regions sequentially. Rolling updates minimizes downtime, reduce bugs, and logical failures in the rare event of a bad update. |
+
+### Services with Region Pairing
 
 | Service | Description | Requires Region Pairing |
 | --- | --- | --- |
