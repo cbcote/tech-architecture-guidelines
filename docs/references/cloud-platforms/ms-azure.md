@@ -29,6 +29,23 @@ Microsoft Azure is a cloud computing service created by Microsoft for building, 
     - [Create a role assignment:](#create-a-role-assignment)
   - [Azure Virtual Networks](#azure-virtual-networks)
     - [Subnets](#subnets)
+    - [Static IP Addresses](#static-ip-addresses)
+    - [Network Security Groups](#network-security-groups)
+    - [Virtual Network Peering](#virtual-network-peering)
+    - [VPN Gateway](#vpn-gateway)
+    - [User Defined Routes (UDR)](#user-defined-routes-udr)
+    - [Service Endpoints](#service-endpoints)
+    - [Azure Private Link](#azure-private-link)
+  - [Azure Load Balancer](#azure-load-balancer)
+    - [Application Gateway](#application-gateway)
+      - [Application Gateway Routing](#application-gateway-routing)
+    - [Application Gateway Components](#application-gateway-components)
+    - [Azure DNS](#azure-dns)
+  - [Azure Storage](#azure-storage)
+    - [Storage Account Types](#storage-account-types)
+    - [Replication Strategies](#replication-strategies)
+    - [Access Storage](#access-storage)
+    - [Azure Blob Storage](#azure-blob-storage)
 
 
 ## Azure Services
@@ -350,3 +367,231 @@ Table of reserved subnet addresses with columns Reserved Address, Reason
 | 192.168.1.1 | Azure configures this address as the default gateway. |
 | 192.168.1.2 and 192.168.1.3 | Azure maps these Azure DNS IP addresses to the virtual network space. |
 | 192.168.1.255 | Broadcast address |
+
+Things to consider when using subnets:
+table with columns scenario, description
+
+| Scenario | Description |
+| --- | --- |
+| Service requirements | Each service directly deployed into a virtual network has specific requirements for routing and the types of traffic that must be allowed into and out of associated subnets. A service might require or create their own subnet. There must be enough unallocated space to meet the service requirements. Suppose you connect a virtual network to an on-premises network by using Azure VPN Gateway. The virtual network must have a dedicated subnet for the gateway. |
+| Network virtual appliances | Azure routes network traffic between all subnets in a virtual network, by default. You can override Azure's default routing to prevent Azure routing between subnets. You can also override the default to route traffic between subnets through a network virtual appliance. If you require traffic between resources in the same virtual network to flow through a network virtual appliance, deploy the resources to different subnets. |
+| Service endpoints | You can limit access to Azure resources like an Azure storage account or Azure SQL database to specific subnets with a virtual network service endpoint. You can also deny access to the resources from the internet. You might create multiple subnets, and then enable a service endpoint for some subnets, but not others. |
+| Network security groups | You can associate zero or one network security group to each subnet in a virtual network. You can associate the same or a different network security group to each subnet. Each network security group contains rules that allow or deny traffic to and from sources and destinations. |
+| Private links | Azure Private Link provides private connectivity from a virtual network to Azure platform as a service (PaaS), customer-owned, or Microsoft partner services. Private Link simplifies the network architecture and secures the connection between endpoints in Azure. The service eliminates data exposure to the public internet. |
+
+![alt text](image-5.png)
+source: <https://docs.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview>
+
+### Static IP Addresses
+
+Situations for Static IP Addresses:
+
+- DNS name resolution, where a change in the IP address requires updating host records.
+- IP address-based security models that require apps or services to have a static IP address.
+- TLS/SSL certificates linked to an IP address.
+- Firewall rules that allow or deny traffic by using IP address ranges.
+- Role-based virtual machines such as Domain Controllers and DNS servers.
+
+### Network Security Groups
+
+- Contains a list of security rules that allow or deny inbound or outbound network traffic.
+- Can be associated to a subnet or a network interface.
+- Can be associated multiple times.
+- You create a network security group and define security rules in the Azure portal.
+
+Network interface card (NIC): a virtual network adapter that provides the network connectivity for a virtual machine.
+
+### Virtual Network Peering
+
+Virtual network peering enables you to connect virtual networks in the same or different regions. Peering provides secure communication between resources in the peered networks.
+After the networks are peered, the two virtual networks operate as one network for connectivity purposes.
+
+Characteristics of virtual network peering:
+
+- 2 types of Azure Virtual Network Peering: **regional** and **global**.
+  ![alt text](image-6.png)
+  source: <https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-peering-overview>
+- Regional peering: connects Azure virtual networks that exist in the same region.
+- Global peering: connects Azure virtual networks that exist in different regions.
+- Global peering of virtual networks in different Azure Government cloud regions isn't permitted.
+- After you create a peering between virtual networks, the individual virtual networks are still managed as separate resources.
+
+### VPN Gateway
+
+![alt text](image-7.png)
+source: <https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-about-vpngateways>
+
+- A virtual network can have only one VPN gateway.
+- Gateway transit is supported for both regional and global peering.
+- Gateway transit allows peered virtual networks to share the gateway and get access to resources. You don't need to deploy a VPN gateway in the peer virtual network.
+- You can apply network security groups in a virtual network to block or allow access to other virtual networks or subnets.
+
+
+### User Defined Routes (UDR)
+
+- User-defined routes (UDR) control traffic by defining routes that specify the next hop of traffic flow.
+
+The next hop can be one of the following:
+
+- Virtual network gateway
+- Virtual network
+- Internet
+- Network virtual appliance (NVA)
+
+- Each route table can be associated to multiple subnets.
+- Each subnet can be associated to one route table only.
+- There are no charges for creating route tables in Azure.
+
+### Service Endpoints
+
+- Service endpoints provides the identity of your virtual network to the Azure service.
+- Configured on a subnet.
+
+![alt text](image-8.png)
+source: <https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-service-endpoints-overview>
+
+
+### Azure Private Link
+
+- Provides private connectivity from a virtual network to Azure platform as a service (PaaS), customer-owned, or Microsoft partner services.
+- Simplifies the network architecture and secures the connection between endpoints in Azure by eliminating data exposure to the public internet.
+
+Characteristics of Azure Private Link:
+
+- Keeps all traffic on the Microsoft global network. There is no exposure to the public internet.
+- Global and there are no regional restrictions.
+- Can privately deliver your own services in your customer's virtual networks.
+- All traffic to the service can be routed through the private endpoint. No gateways, NAT devices, ExpressRoute, or VPN connections are needed.
+
+![alt text](image-9.png)
+source: <https://docs.microsoft.com/en-us/azure/private-link/private-link-overview>
+
+## Azure Load Balancer
+
+Azure Load Balancer delivers high availability and network performance to your applications. Use load balancing to efficiently distribute incoming
+network traffic across back-end servers and resources. A load balancer is implemented by using load-balancing rules and health probes.
+
+![alt text](image-10.png)
+source: <https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-overview>
+
+Characteristics of Azure Load Balancer:
+
+- Can be used for inbound and outbound services.
+- Can implement a public or internal load balancer, or both.
+- Configure four components: front-end IP configuration, back-end address pool, load-balancing rules, and health probes.
+- Front-end configuration specifies the public IP or internal IP that the load balancer uses.
+- Back-end pools are your services and resources, such as virtual machines.
+- Load-balancing rules define how traffic is distributed to the back-end pool.
+- Health probes ensure the resources in the backend are healthy and can receive traffic.
+- Scales up to millions of TCP and UDP flows.
+
+### Application Gateway
+
+Admins use Azure Application Gateway to manage requests from client applications to their web apps. An application gateway listens for incoming traffic to web apps and checks for messages sent via protocols like HTTP. Gateway rules direct traffic to resources in a back-end pool.
+
+![alt text](image-11.png)
+source: <https://docs.microsoft.com/en-us/azure/application-gateway/overview>
+
+Benefits of Azure Application Gateway:
+
+| Benefit | Description |
+| --- | --- |
+| Application layer routing | Use application layer routing to direct traffic to a back-end pool of web servers based on the URL of a request. The back-end pool can include Azure virtual machines, Azure Virtual Machine Scale Sets, Azure App Service, and even on-premises servers. |
+| Round-robin load balancing | Employ round-robin load balancing to distribute incoming traffic across multiple servers. Send load-balance requests to the servers in each back-end pool. Client requests are forwarded in a cycle through a group of servers to create an effective balance for the server load. |
+| Session stickiness | Apply session stickiness to your application gateway to ensure client requests in the same session are routed to the same back-end server. |
+| Supported protocols | Build an application gateway to support the HTTP, HTTPS, HTTP/2, or WebSocket protocols. |
+| Firewall protection | Implement a web application firewall to protect against web application vulnerabilities. |
+| Encryption | Support end-to-end request encryption for your web applications. |
+| Load autoscaling | Dynamically adjust capacity as your web traffic load changes. |
+
+#### Application Gateway Routing
+
+- 2 primary methods for routing traffic:
+  - **Path-based routing**: sends requests with different URL paths to different pools of back-end servers.
+  - **Multi-site routing**: configures more than one web application on the same application gateway instance.
+- **Redirect traffic**: received at one listener to another listener, or to an external site. This approach is commonly used by web apps to automatically redirect HTTP requests to communicate via HTTPS. The redirection ensures all communication between your web app and clients occurs over an encrypted path.
+- **Rewrite HTTP headers**: HTTP headers allow the client and server to pass parameter information with the request or the response. In this scenario, you can translate URLs or query string parameters, and modify request and response headers. Add conditions to ensure URLs or headers are rewritten only for certain conditions.
+- Application Gateway allows you to create custom error pages instead of displaying default error pages. You can use your own branding and layout by using a custom error page.
+
+Path-Based Routing:
+
+![alt text](image-12.png)
+source: <https://docs.microsoft.com/en-us/azure/application-gateway/path-based-routing-overview>
+
+Multi-Site Routing:
+
+![alt text](image-13.png)
+source: <https://docs.microsoft.com/en-us/azure/application-gateway/multi-site-overview>
+
+### Application Gateway Components
+
+- **Front-end IP address**: receives requests.
+- **Web-application firewall (optional)**: checks incoming traffic for common threats before the requests reach the listeners.
+- **Listeners**: receive the traffic and route the requests to the back-end pool.
+- **Routing rules**: define how to analyze the request to direct the request to the appropriate back-end pool.
+- **Back-end pool**: contains web servers for resources like virtual machines or Virtual Machine Scale Sets. Each pool has a load balancer to distribute the workload across the resources.
+- **Health probes**: monitor the health of the back-end resources. Determine which back-end pool servers are available for load-balancing.
+
+![alt text](image-14.png)
+source: <https://docs.microsoft.com/en-us/azure/application-gateway/application-gateway-components>
+
+### Azure DNS
+
+Azure DNS is a hosting service for Domain Name System (DNS) domains that provides name resolution by using Microsoft Azure infrastructure.
+
+DNS, or the Domain Name System, is a protocol within the TCP/IP standard. DNS serves an essential role of translating the human-readable domain names—for example: www.wideworldimports.com—into a known IP address. IP addresses enable computers and network devices to identify and route requests among themselves.
+
+DNS uses a global directory hosted on servers around the world. Microsoft is part of the network that provides a DNS service through Azure DNS.
+
+A DNS server is also known as a DNS name server, or just a name server.
+
+A DNS server carries out one of two primary functions:
+
+- Maintains a local cache of recently accessed or used domain names and their IP addresses. This cache provides a faster response to a local domain lookup request. If the DNS server can't find the requested domain, it passes the request to another DNS server. This process repeats at each DNS server until either a match is made or the search times out.
+- Maintains the key-value pair database of IP addresses and any host or subdomain over which the DNS server has authority. This function is often associated with mail, web, and other internet domain services.
+
+Every computer, server, or network-enabled device on your network has an IP address. An IP address is unique within your domain. There are two standards of IP address: IPv4 and IPv6.
+
+- **IPv4** is composed of four sets of numbers, in the range 0 to 255, each separated by a dot; for example: 127.0.0.1. Today, IPv4 is the most commonly used standard. Yet, with the increase in IoT devices, the IPv4 standard will eventually be unable to keep up.
+
+- **IPv6** is a relatively new standard and is intended to eventually replace IPv4. It consists of eight groups of hexadecimal numbers, each separated by a colon; for example: fe80:11a1:ac15:e9gf:e884:edb0:ddee:fea3.
+
+Many network devices are now provisioned with both an IPv4 and an IPv6 address. The DNS name server can resolve domain names to both IPv4 and IPv6 addresses.
+
+## Azure Storage
+
+### Storage Account Types
+
+| Storage Account | Supported Services | Recommended Usage |
+| --- | --- | --- |
+| Standard general-purpose v2 | Blobs, Azure Files, Queue Storage, Table Storage, Disks | Most scenarios, including VMs, databases, and big data |
+| Premium block blob | Blobs | High-performance, transaction-intensive workloads |
+| Premium file shares | Azure Files | High-performance, transaction-intensive workloads |
+| Premium page blobs | Disks | High-performance, transaction-intensive workloads |
+
+### Replication Strategies
+
+4 replication strategies:
+
+- **Locally redundant storage (LRS)**: replicates your data three times in a storage scale unit in a data center. LRS is the least expensive replication option, but it does not protect your data from a data center failure.
+- **Zone-redundant storage (ZRS)**: replicates your data across multiple data centers within the same region. ZRS is more expensive than LRS but less expensive than GRS or RA-GRS. ZRS protects your data from a data center failure.
+- **Geo-redundant storage (GRS)**: replicates your data to a secondary region, hundreds of miles away from the primary location of the source data. GRS is more expensive than LRS or ZRS but provides a higher level of durability for your data, even if the primary region is unavailable.
+- **Read-access geo-redundant storage (RA-GRS)**: provides read-only access to the data in the secondary region, in addition to Geo-redundant storage capabilities. RA-GRS is the most expensive replication option but provides the highest level of durability and availability for your data.
+
+### Access Storage
+
+Every object you store in Azure Storage has a unique URL address. Your storage account name forms the subdomain portion of the URL address. The combination of the subdomain and the domain name, which is specific to each service, forms an endpoint for your storage account.
+
+Example:
+
+table with column names service, default endpoint
+
+| Service | Default Endpoint |
+| --- | --- |
+| Container service | `https://<storage-account-name>.blob.core.windows.net` |
+| Table service | `https://<storage-account-name>.table.core.windows.net` |
+| Queue service | `https://<storage-account-name>.queue.core.windows.net` |
+| File service | `https://<storage-account-name>.file.core.windows.net` |
+
+### Azure Blob Storage
+
