@@ -595,3 +595,18 @@ table with column names service, default endpoint
 
 ### Azure Blob Storage
 
+Blob Storage is a service that stores unstructured data in the cloud as objects or blobs. Blob stands for **Binary Large Object**.
+
+Blob Storage is also referred to as **object storage** or **container storage**.
+
+Blob Storage can store any type of text or binary data, such as:
+
+- Text documents
+- Images
+- Videos
+- Application Installers
+
+Relationship between Blob Storage and resources:
+
+![alt text](image-15.png)
+source: <https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blobs-introduction>
