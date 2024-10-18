@@ -46,6 +46,13 @@ Microsoft Azure is a cloud computing service created by Microsoft for building, 
     - [Replication Strategies](#replication-strategies)
     - [Access Storage](#access-storage)
     - [Azure Blob Storage](#azure-blob-storage)
+    - [Azure Storage Security](#azure-storage-security)
+      - [Shared Access Signatures (SAS)](#shared-access-signatures-sas)
+      - [Azure Storage Encryption](#azure-storage-encryption)
+      - [Customer Managed Keys](#customer-managed-keys)
+      - [Azure Files](#azure-files)
+      - [Azure File Sync](#azure-file-sync)
+      - [Azure Storage Explorer](#azure-storage-explorer)
 
 
 ## Azure Services
@@ -610,3 +617,123 @@ Relationship between Blob Storage and resources:
 
 ![alt text](image-15.png)
 source: <https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blobs-introduction>
+
+table of blob storage access tiers with columns tier, description
+
+| Tier | Description |
+| --- | --- |
+| Hot | Optimized for storing data that is accessed frequently. |
+| Cool | Optimized for storing data that is infrequently accessed and stored for at least 30 days. |
+| Cold | The Cold tier is also optimized for storing large amounts of data that's infrequently accessed. This tier is intended for data that can remain in the tier for at least 90 days. |
+| Archive | Optimized for storing data that is rarely accessed and stored for at least 180 days. |
+
+
+| Access Tier | Data Access | Data Retrieval | Data Storage |
+| --- | --- | --- | --- |
+| Hot | Frequent | Immediate | Higher cost |
+| Cool | Infrequent | Immediate | Lower cost |
+| Cold | Infrequent | Immediate | Lower cost |
+| Archive | Rare | Delayed | Lowest cost |
+
+**Different Blob Types**
+
+| Type | Description |
+| --- | --- |
+| Block blobs | Optimized for streaming and storing cloud objects, such as documents, media files, or application installers. |
+| Append blobs | Optimized for append operations, such as logging data from virtual machines. |
+| Page blobs | Optimized for random read-write operations, such as virtual hard disk (VHD) files for Azure Virtual Machines. |
+
+### Azure Storage Security
+
+| Characteristic | Description |
+| --- | --- |
+| Data encryption | All data written to Azure Storage is automatically encrypted by using Azure Storage encryption. |
+| Authentication | Microsoft Entra ID and role-based access control (RBAC) are supported for Azure Storage for both resource management operations and data operations. Assign RBAC roles scoped to an Azure storage account to security principals, and use Microsoft Entra ID to authorize resource management operations like key management. Microsoft Entra integration is supported for data operations on Azure Blob Storage and Azure Queue Storage. |
+| Authorization | Every request made against a secured resource in Blob Storage, Azure Files, Queue Storage, or Azure Cosmos DB (Azure Table Storage) must be authorized. Authorization ensures that resources in your storage account are accessible only when you want them to be, and to only those users or applications whom you grant access. |
+| Data in transit | Data can be secured in transit between an application and Azure by using Client-Side Encryption, HTTPS, or SMB 3.0. |
+| Disk encryption | Operating system disks and data disks used by Azure Virtual Machines can be encrypted by using Azure Disk Encryption. |
+| Shared access signatures | elegated access to the data objects in Azure Storage can be granted by using a shared access signature (SAS). |
+
+**Authorization Strategies**
+table with columns strategy, description
+
+| Strategy | Description |
+| --- | --- |
+| Microsoft Entra ID | Microsoft Entra ID is Microsoft's cloud-based identity and access management service. With Microsoft Entra ID, you can assign fine-grained access to users, groups, or applications by using role-based access control. |
+| Shared access signatures | A SAS delegates access to a particular resource in your Azure storage account with specified permissions and for a specified time interval. |
+| Shared keys | Shared Key authorization relies on your Azure storage account access keys and other parameters to produce an encrypted signature string. The string is passed on the request in the Authorization header. |
+| Anonymous access to containers and blobs | You can optionally make blob resources public at the container or blob level. A public container or blob is accessible to any user for anonymous read access. Read requests to public containers and blobs don't require authorization. |
+
+#### Shared Access Signatures (SAS)
+
+A shared access signature (SAS) is a uniform resource identifier (URI) that grants restricted access rights to Azure Storage resources. SAS is a secure way to share your storage resources without compromising your account keys.
+
+You can provide a SAS to clients who shouldn't have access to your storage account key. By distributing a SAS URI to these clients, you grant them access to a resource for a specified period of time.
+
+#### Azure Storage Encryption
+
+Azure Storage encryption for data at rest protects your data by ensuring your organizational security and compliance commitments are met. The encryption and decryption processes happen automatically. Because your data is secured by default, you don't need to modify your code or applications.
+
+- Data is encrypted automatically before it's persisted to Azure Managed Disks, Azure Blob Storage, Azure Queue Storage, Azure Cosmos DB, Azure Table Storage, or Azure Files.
+- Data is automatically decrypted before it's retrieved.
+- Azure Storage encryption, encryption at rest, decryption, and key management are transparent to users.
+- All data written to Azure Storage is encrypted through 256-bit advanced encryption standard (AES) encryption. AES is one of the strongest block ciphers available.
+- Azure Storage encryption is enabled for all new and existing storage accounts and can't be disabled.
+
+#### Customer Managed Keys
+
+For your Azure Storage security solution, you can use Azure Key Vault to manage your encryption keys. The Azure Key Vault APIs can be used to generate encryption keys. You can also create your own encryption keys and store them in a key vault.
+
+- By creating your own keys (referred to as customer-managed keys), you have more flexibility and greater control.
+- You can create, disable, audit, rotate, and define access controls for your encryption keys.
+- Customer-managed keys can be used with Azure Storage encryption. You can use a new key or an existing key vault and key. The Azure storage account and the key vault **must be in the same region**, but they **can be in different subscriptions**.
+
+#### Azure Files
+
+Azure Files offers shared storage for applications by using the industry standard Server Message Block and Network File System (NFS) protocols. Azure virtual machines (VMs) and cloud services can share file data across application components by using mounted shares. On-premises applications can also access file data in the share.
+
+- Azure Files stores data as true directory objects in file shares.
+- Azure Files provides shared access to files across multiple VMs. Any number of Azure virtual machines or roles can mount and access an Azure file share simultaneously.
+- Applications that run in Azure VMs or cloud services can mount an Azure file share to access file data. This process is similar to how a desktop application mounts a typical SMB share.
+- Azure Files offers fully managed file shares in the cloud. Azure file shares can be mounted concurrently by cloud or on-premises deployments of Windows, Linux, and macOS.
+
+**Azure File vs Azure Blob**
+table with columns Azure File, Azure Blob
+
+| Azure File | Azure Blob |
+| --- | --- |
+|Azure Files provides the SMB and NFS protocols, client libraries, and a REST interface that allows access from anywhere to stored files. | Azure Blob Storage provides client libraries and a REST interface that allows unstructured data to be stored and accessed at a massive scale in block blobs. |
+| Files in an Azure Files share are true directory objects. Data in Azure Files is accessed through file shares across multiple virtual machines. | Blobs in Azure Blob Storage are a flat namespace. Blob data in Azure Blob Storage is accessed through a container. |
+| Azure Files is ideal to lift and shift an application to the cloud that already uses the native file system APIs. Share data between the app and other applications running in Azure. Azure Files is a good option when you want to store development and debugging tools that need to be accessed from many virtual machines. | Azure Blob Storage is ideal for applications that need to support streaming and random-access scenarios. Azure Blob Storage is a good option when you want to be able to access application data from anywhere. |
+
+Types of Azure file shares:
+- Premium tier: stores data on modern solid-state drives (SSDs), while the standard tier uses hard disk drives (HDDs).
+- Standard tier: can be used with SMB and REST protocols only, while premium file shares can be used with SMB, NFS, and REST protocols.
+- You can easily switch between hot, cool, and transaction optimized tiers of standard file shares, but you can't switch from premium file shares to any of the standard tiers.
+
+**File Share Snapshots**
+
+- Azure Files supports file share snapshots. Snapshots are read-only versions of a file share that are created at a specific point in time.
+
+Characteristics of file share snapshots:
+
+- Azure Files share snapshot capability is provided at the file share level.
+- Share snapshots are incremental. Only data changed since most recent share snapshot is saved.
+- Incremental snapshots minimize the time required to create share snapshots and saves on storage costs.
+- You only need to retain the most recent share snapshot to restore the share to its previous state.
+- You can retrieve a share snapshot for an individual file.
+- Share snapshots provide only file-level protection. They don't prevent fat-finger deletions on a file share or storage account. If you delete a file share that has share snapshots, all of its snapshots will be deleted along with the share.
+
+#### Azure File Sync
+
+Azure File Sync enables you to cache several Azure Files shares on an on-premises Windows Server or cloud virtual machine. You can use Azure File Sync to centralize your organization's file shares in Azure Files, while keeping the flexibility, performance, and compatibility of an on-premises file server.
+
+- Azure File Sync transforms Windows Server into a quick cache of your Azure Files shares.
+- You can use any protocol that's available on Windows Server to access your data locally with Azure File Sync, including SMB, NFS, and FTPS.
+- Azure File Sync supports as many caches as you need around the world.
+
+#### Azure Storage Explorer
+
+Azure Storage Explorer is a standalone application that makes it easy to work with Azure Storage data on Windows, macOS, and Linux. With Azure Storage Explorer, you can access multiple accounts and subscriptions, and manage all your Storage content.
+
+- Azure Storage Explorer requires both management (Azure Resource Manager) and data layer permissions to allow full access to your resources. You need Microsoft Entra ID (formerly Azure Active Directory) permissions to access your storage account, the containers in your account, and the data in the containers.
